@@ -1,0 +1,19 @@
+version: "3"
+services:
+  busservicedb:
+    image: busservicedb:latest
+    container_name: busservicedb
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+  app:
+    image: busservice:latest
+    container_name: busservice
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    command: sh -c "/wait && java -jar /app/app.jar"
+    environment:
+      - WAIT_HOSTS=busservicedb:5432

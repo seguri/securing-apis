@@ -1,0 +1,20 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="users">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="user" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element type="xs:nonNegativeInteger" name="id" minOccurs="1" maxOccurs="unbounded"/>
+                            <xs:element type="xs:string" name="name" minOccurs="1" maxOccurs="unbounded"/>
+                            <xs:element type="xs:nonNegativeInteger" name="age"/>
+                            <xs:element type="xs:string" name="phone"/>
+                            <xs:element type="xs:string" name="address"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+

@@ -1,0 +1,285 @@
+{
+	"info": {
+		"_postman_id": "e691aea1-bdbb-4a4a-8d54-f36554aacb61",
+		"name": "Bus Ticket Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Api-Key",
+						"type": "text",
+						"value": "{{valid_api_key}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 22,\n    \"phone\": \"530-824-3969\",\n\t\"name\": \"Robert\",\n\t\"age\": 43,\n    \"address\": \"Willington st\"\n}",
+					"options": {
+						"raw": {}
+					}
+				},
+				"url": {
+					"raw": "{{server_url}}/v1/users",
+					"host": [
+						"{{server_url}}"
+					],
+					"path": [
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Book Ticket",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Api-Key",
+						"type": "text",
+						"value": "{{valid_api_key}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n      \"id\": 13,\n      \"user_id\": 2,\n      \"price\": 1999,\n      \"currency\": \"usd\",\n      \"source\": \"Los Angeles\",\n      \"destination\": \"San Diego\"\n}"
+				},
+				"url": {
+					"raw": "{{server_url}}/v1/tickets",
+					"host": [
+						"{{server_url}}"
+					],
+					"path": [
+						"v1",
+						"tickets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload Photo",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "image/jpeg"
+					},
+					{
+						"key": "X-Api-Key",
+						"type": "text",
+						"value": "{{valid_api_key}}"
+					},
+					{
+						"key": "",
+						"value": " ",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {}
+				},
+				"url": {
+					"raw": "{{server_url}}/v1/users/{{user_id}}/photos/",
+					"host": [
+						"{{server_url}}"
+					],
+					"path": [
+						"v1",
+						"users",
+						"{{user_id}}",
+						"photos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"type": "text",
+						"value": "{{valid_api_key}}"
+					}
+				],
+				"url": {
+					"raw": "{{server_url}}/v1/users/{{user_id}}",
+					"host": [
+						"{{server_url}}"
+					],
+					"path": [
+						"v1",
+						"users",
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Users",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"type": "text",
+						"value": "{{valid_api_key}}"
+					}
+				],
+				"url": {
+					"raw": "{{server_url}}/v1/users?limit=2",
+					"host": [
+						"{{server_url}}"
+					],
+					"path": [
+						"v1",
+						"users"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Tickets",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"type": "text",
+						"value": "{{valid_api_key}}"
+					}
+				],
+				"url": {
+					"raw": "{{server_url}}/v1/tickets",
+					"host": [
+						"{{server_url}}"
+					],
+					"path": [
+						"v1",
+						"tickets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Ticket",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"type": "text",
+						"value": "{{valid_api_key}}"
+					}
+				],
+				"url": {
+					"raw": "{{server_url}}/v1/tickets/{{ticket_id}}",
+					"host": [
+						"{{server_url}}"
+					],
+					"path": [
+						"v1",
+						"tickets",
+						"{{ticket_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User Batch",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Api-Key",
+						"type": "text",
+						"value": "{{valid_api_key}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<users>\n\t<user>\n\t\t<id>50</id>\n\t\t<name>Joe Slemmington</name>\n\t\t<age>53</age>\n\t\t<phone>32444543</phone>\n\t\t<address>Louis Street 423</address>\n\t</user>\n</users>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{server_url}}/v1/users/batch",
+					"host": [
+						"{{server_url}}"
+					],
+					"path": [
+						"v1",
+						"users",
+						"batch"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"id": "6c5c1258-1cb7-44b3-87eb-66c08f3eceec",
+			"key": "server_url",
+			"value": "localhost:8080"
+		},
+		{
+			"id": "ddfa56cd-6fb6-4b32-821c-e4781f732e95",
+			"key": "valid_api_key",
+			"value": "cduaLgypunElZjNWpuxBJqV4E6ZFX1d4"
+		},
+		{
+			"id": "b2953709-3053-48a2-8193-eaa48d7f25ca",
+			"key": "user_id",
+			"value": "2"
+		},
+		{
+			"id": "3d3e50db-3133-45fc-918e-0de4445f23f0",
+			"key": "ticket_id",
+			"value": "2"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

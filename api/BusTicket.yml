@@ -1,0 +1,291 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Bus Ticket Booking API
+  license:
+    name: MANNING
+servers:
+  - url: http://tickets.demobus.io/v1
+paths:
+  /users:
+    get:
+      summary: List all Users
+      operationId: listUsers
+      tags:
+        - users
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return at one time (max 100)
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: A paged array of users
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: create a User
+      operationId: createUsers
+      tags:
+        - users
+      requestBody:
+        description: Send the User Object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /users/batch:
+    post:
+      summary: Upload a batch of users through a XML file
+      operationId: uploadUsersBatch
+      tags:
+        - users
+      requestBody:
+        description: Send a XML file containing a list of users
+        required: true
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Users'
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /users/{userId}:
+    get:
+      summary: Info for a specific user
+      operationId: showUserById
+      tags:
+        - users
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The id of the user to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /users/{userId}/photos/:
+    post:
+      summary: Upload Photo of the User
+      operationId: uploadPhotoByID
+      tags:
+        - users
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The id of the user to which photo is being uploaded
+          schema:
+            type: string
+      requestBody:
+        content:
+          image/png:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /tickets:
+    get:
+      summary: List all tickets
+      operationId: listTickets
+      tags:
+        - tickets
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return at one time (max 100)
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: A paged array of tickets
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tickets"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Book a ticket
+      operationId: bookTickets
+      tags:
+        - tickets
+      requestBody:
+        description: Send the Ticket Object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ticket'
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /tickets/{ticketId}:
+    get:
+      summary: Info for a specific ticket
+      operationId: showTicketById
+      tags:
+        - tickets
+      parameters:
+        - name: ticketId
+          in: path
+          required: true
+          description: The id of the ticket to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ticket"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  securitySchemes:
+    ApiKeyAuth: # arbitrary name for the security scheme
+      type: apiKey
+      in: header       # can be "header", "query" or "cookie"
+      name: X-API-KEY
+  schemas:
+    User:
+      type: object
+      required:
+        - name
+        - phone
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        age:
+          type: integer
+          format: int64
+        phone:
+          type: string
+        address:
+          type: string
+    Ticket:
+      type: object
+      required:
+        - id
+        - user_id
+      properties:
+        id:
+          type: integer
+          format: int64
+        user_id:
+          type: integer
+          format: int64
+        price:
+          type: integer
+          format: int64
+        currency:
+          type: string
+        source:
+          type: string
+        destination:
+          type: string
+    Tickets:
+      type: array
+      items:
+        $ref: "#/components/schemas/Ticket"
+    Users:
+      type: array
+      items:
+        $ref: "#/components/schemas/User"
+      xml:
+        name: 'users'
+        wrapped: true
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+security:
+  - ApiKeyAuth: []
