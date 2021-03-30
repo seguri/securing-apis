@@ -24,18 +24,18 @@ public class PostgresUserRepository implements UserRepository {
 
     @Override
     public void createUser(User user) {
-        String sql = String.format("INSERT INTO " +
-                        "user_account(id, name, age, phone, address) " +
-                        "VALUES (%d, '%s', %d, '%s', '%s')",
-                user.getId(),
-                user.getName(),
-                user.getAge(),
-                user.getPhone(),
-                user.getAddress());
+        String sql = "INSERT INTO" +
+                        " user_account(id, name, age, phone, address)" +
+                        " VALUES (?, ?, ?, ?, ?)";
 
         try(Connection con = this.ds.getConnection()) {
-            Statement stm = con.createStatement();
-            stm.executeUpdate(sql);
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setLong(1, user.getId());
+            statement.setString(2, user.getName());
+            statement.setInt(3, user.getAge());
+            statement.setString(4, user.getPhone());
+            statement.setString(5, user.getAddress());
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new BusTicketException(e);
         }
@@ -43,21 +43,20 @@ public class PostgresUserRepository implements UserRepository {
 
     @Override
     public void createUsers(List<User> users) {
+        String sql = "INSERT INTO" +
+            " user_account(id, name, age, phone, address)" +
+            " VALUES (?, ?, ?, ?, ?)";
         try(Connection con = this.ds.getConnection()) {
-            Statement st = con.createStatement();
+            PreparedStatement statement = con.prepareStatement(sql);
             for (User user: users) {
-                String sql = String.format("INSERT INTO " +
-                                "user_account(id, name, age, phone, address) " +
-                                "VALUES (%d, '%s', %d, '%s', '%s')",
-                        user.getId(),
-                        user.getName(),
-                        user.getAge(),
-                        user.getPhone(),
-                        user.getAddress());
-
-                st.addBatch(sql);
+                statement.setLong(1, user.getId());
+                statement.setString(2, user.getName());
+                statement.setInt(3, user.getAge());
+                statement.setString(4, user.getPhone());
+                statement.setString(5, user.getAddress());
+                statement.addBatch();
             }
-            st.executeBatch();
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new BusTicketException(e);
         }
@@ -65,13 +64,14 @@ public class PostgresUserRepository implements UserRepository {
 
     @Override
     public User getUserByID(Long id) {
-        String sql = "SELECT id, name, phone, age, address " +
-                "FROM user_account " +
-                "WHERE id = " + id;
+        String sql = "SELECT id, name, phone, age, address" +
+                " FROM user_account" +
+                " WHERE id = ?";
 
         try(Connection con = this.ds.getConnection()) {
-            Statement stm = con.createStatement();
-            try (ResultSet rs = stm.executeQuery(sql)) {
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setLong(1, id);
+            try (ResultSet rs = statement.executeQuery()) {
                 rs.next();
                 return readUserFromResultSet(rs);
             }
@@ -83,16 +83,18 @@ public class PostgresUserRepository implements UserRepository {
     @Override
     public PaginatedResponse<User> listUsers(Long lastFetchedId, Integer limit) {
         String sql = "SELECT id, name, phone, age, address " +
-                "FROM user_account " +
-                "WHERE id >  " + lastFetchedId + " " +
-                "ORDER BY id " +
-                "LIMIT " + limit;
+                " FROM user_account" +
+                " WHERE id > ?" +
+                " ORDER BY id" +
+                " LIMIT ?";
 
         List<User> users = new ArrayList<>();
         Long cursor = 0L;
         try(Connection con = this.ds.getConnection()) {
-            Statement stm = con.createStatement();
-            try (ResultSet rs = stm.executeQuery(sql)) {
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setLong(1, lastFetchedId);
+            statement.setLong(2, limit);
+            try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
                     User user = readUserFromResultSet(rs);
                     users.add(user);

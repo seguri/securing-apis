@@ -24,19 +24,18 @@ public class PostgresTicketRepository implements TicketRepository {
 
     @Override
     public void bookTicket(Ticket ticket) {
-        String sql = String.format("INSERT INTO" +
-                        " ticket(id, user_id, price, currency, source, destination) " +
-                        " VALUES (%d, %d, %d, '%s', '%s', '%s')",
-                ticket.getId(),
-                ticket.getUserId(),
-                ticket.getPrice(),
-                ticket.getCurrency(),
-                ticket.getSource(),
-                ticket.getDestination());
-
+        String sql = "INSERT INTO" +
+                        " ticket(id, user_id, price, currency, source, destination)" +
+                        " VALUES (?, ?, ?, ?, ?, ?)";
         try(Connection con = this.ds.getConnection()) {
-            Statement statement = con.createStatement();
-            statement.executeUpdate(sql);
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setLong(1, ticket.getId());
+            statement.setLong(2, ticket.getUserId());
+            statement.setLong(3, ticket.getPrice());
+            statement.setString(4, ticket.getCurrency());
+            statement.setString(5, ticket.getSource());
+            statement.setString(6, ticket.getDestination());
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new BusTicketException(e);
         }
@@ -44,17 +43,19 @@ public class PostgresTicketRepository implements TicketRepository {
 
     @Override
     public PaginatedResponse<Ticket> listTickets(Long lastFetchedId, Integer limit) {
-        String sql = "SELECT id, user_id, price, currency, source, destination " +
-                " FROM ticket " +
-                " WHERE id >  " + lastFetchedId +
-                " ORDER BY id " +
-                " LIMIT " + limit;
+        String sql = "SELECT id, user_id, price, currency, source, destination" +
+                " FROM ticket" +
+                " WHERE id > ?" +
+                " ORDER BY id" +
+                " LIMIT ?";
 
         List<Ticket> tickets = new ArrayList<>();
         Long cursor = 0L;
         try (Connection con = this.ds.getConnection()) {
-            Statement stm = con.createStatement();
-            try (ResultSet rs = stm.executeQuery(sql)) {
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setLong(1, lastFetchedId);
+            statement.setInt(2, limit);
+            try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
                     Ticket ticket = readTicketFromResultSet(rs);
                     tickets.add(ticket);
@@ -70,13 +71,14 @@ public class PostgresTicketRepository implements TicketRepository {
 
     @Override
     public Ticket getTicket(Integer ticketId) {
-        String sql = "SELECT id, user_id, price, currency, source, destination " +
-                " FROM ticket " +
-                " WHERE id = " + ticketId;
+        String sql = "SELECT id, user_id, price, currency, source, destination" +
+                " FROM ticket" +
+                " WHERE id = ?";
 
         try (Connection con = this.ds.getConnection()) {
-            Statement stm = con.createStatement();
-            try (ResultSet rs = stm.executeQuery(sql)) {
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setLong(1, ticketId);
+            try (ResultSet rs = statement.executeQuery()) {
                 rs.next();
                 return readTicketFromResultSet(rs);
             }
