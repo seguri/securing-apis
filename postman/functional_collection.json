@@ -23,10 +23,40 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"id\": 22,\n    \"phone\": \"530-824-3969\",\n\t\"name\": \"Robert\",\n\t\"age\": 43,\n    \"address\": \"Willington st\"\n}",
-					"options": {
-						"raw": {}
+					"raw": "{\n\t\"id\": 22,\n    \"phone\": \"530-824-3969\",\n\t\"name\": \"Robert\",\n\t\"age\": 43,\n    \"address\": \"Willington st\"\n}"
+				},
+				"url": {
+					"raw": "{{server_url}}/v1/users",
+					"host": [
+						"{{server_url}}"
+					],
+					"path": [
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User with SQL Injection",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Api-Key",
+						"type": "text",
+						"value": "{{valid_api_key}}"
 					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 22,\n    \"phone\": \"530-824-3969\",\n\t\"name\": \"Robert\",\n\t\"age\": 43,\n    \"address\": \"'); DROP TABLE user_account;--\"\n}"
 				},
 				"url": {
 					"raw": "{{server_url}}/v1/users",
@@ -60,6 +90,39 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\n      \"id\": 13,\n      \"user_id\": 2,\n      \"price\": 1999,\n      \"currency\": \"usd\",\n      \"source\": \"Los Angeles\",\n      \"destination\": \"San Diego\"\n}"
+				},
+				"url": {
+					"raw": "{{server_url}}/v1/tickets",
+					"host": [
+						"{{server_url}}"
+					],
+					"path": [
+						"v1",
+						"tickets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Book Ticket with SQL Injection",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Api-Key",
+						"type": "text",
+						"value": "{{valid_api_key}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n      \"id\": 13,\n      \"user_id\": 2,\n      \"price\": 1999,\n      \"currency\": \"usd\",\n      \"source\": \"Los Angeles\",\n      \"destination\": \"'); DROP TABLE ticket;--\"\n}"
 				},
 				"url": {
 					"raw": "{{server_url}}/v1/tickets",
@@ -261,25 +324,25 @@
 	],
 	"variable": [
 		{
-			"id": "6c5c1258-1cb7-44b3-87eb-66c08f3eceec",
+            "id": "6c5c1258-1cb7-44b3-87eb-66c08f3eceec",
 			"key": "server_url",
 			"value": "localhost:8080"
 		},
 		{
-			"id": "ddfa56cd-6fb6-4b32-821c-e4781f732e95",
+            "id": "ddfa56cd-6fb6-4b32-821c-e4781f732e95",
 			"key": "valid_api_key",
 			"value": "cduaLgypunElZjNWpuxBJqV4E6ZFX1d4"
 		},
 		{
-			"id": "b2953709-3053-48a2-8193-eaa48d7f25ca",
+            "id": "b2953709-3053-48a2-8193-eaa48d7f25ca",
 			"key": "user_id",
 			"value": "2"
 		},
 		{
-			"id": "3d3e50db-3133-45fc-918e-0de4445f23f0",
+            "id": "3d3e50db-3133-45fc-918e-0de4445f23f0",
 			"key": "ticket_id",
 			"value": "2"
 		}
 	],
-	"protocolProfileBehavior": {}
+    "protocolProfileBehavior": {}
 }
