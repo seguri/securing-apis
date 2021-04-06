@@ -57,6 +57,7 @@ public class ApplicationAPI {
                 get("/:userId", this::getUser, gson::toJson);
                 post("", this::createUser);
                 post("/batch", this::createUserBatch);
+                post("/:userId/photos", this::uploadPhoto, gson::toJson);
                 post("/:userId/photos/", this::uploadPhoto, gson::toJson);
             });
         });
