@@ -64,8 +64,7 @@ public class ServiceImpl implements Service {
         }
 
         try {
-            String filePrefix = user.getName().replaceAll(" ", "");
-            File temp = File.createTempFile(filePrefix, ".png");
+            File temp = File.createTempFile(user.getId().toString(), ".png");
 
             RandomAccessFile rw = new RandomAccessFile(temp, "rw");
             rw.write(photoInputStream.readAllBytes());
