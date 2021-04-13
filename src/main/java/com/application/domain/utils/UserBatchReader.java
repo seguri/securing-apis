@@ -12,9 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserBatchReader {
+    private static final String DISALLOW_DOCTYPE_DECL = "http://apache.org/xml/features/disallow-doctype-decl";
 
     public static List<User> read(ByteArrayInputStream in) throws Exception {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        dbFactory.setFeature(DISALLOW_DOCTYPE_DECL, true);
         DocumentBuilder db = dbFactory.newDocumentBuilder();
         Document doc = db.parse(in);
         doc.getDocumentElement().normalize();
