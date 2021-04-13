@@ -6,7 +6,7 @@ RUN mkdir -p /app/
 RUN mkdir -p /app/images/
 
 # adds jar app
-ADD build/libs/ms1-1.0-SNAPSHOT.jar /app/app.jar
+ADD build/libs/securing-apis-1.0-SNAPSHOT.jar /app/app.jar
 
 # adds configuration files
 ADD src/main/resources/application.properties /app/application.properties
